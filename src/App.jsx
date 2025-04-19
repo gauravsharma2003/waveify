@@ -1,9 +1,9 @@
 import React from 'react'
-
+import Root from './components/Root'
 function App() {
   return (
     <div>
-      <h1>Wavyify</h1>
+      <Root />
     </div>
   )
 }
