@@ -1,10 +1,9 @@
 import React from 'react'
-import Root from './components/Root'
+import Main from './components/Main/Main'
+
 function App() {
   return (
-    <div>
-      <Root />
-    </div>
+    <Main />
   )
 }
 

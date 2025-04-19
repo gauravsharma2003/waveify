@@ -1,10 +1,9 @@
 import React from 'react'
-import MusicPlayer from './MusicPlayer'
-
+import Main from './Main/Main'
 function Root() {
   return (
     <div>
-      <MusicPlayer />
+      <Main />
     </div>
   )
 }
