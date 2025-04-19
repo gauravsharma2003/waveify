@@ -30,7 +30,7 @@ function Banner({ songId }) {
       <div className="w-full flex justify-center items-center py-4">
         <div className="w-full max-w-[500px] h-auto aspect-square bg-zinc-950 rounded-lg relative">
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-zinc-600 text-lg md:text-xl px-4 text-center">Search and select a song to display</p>
+            <p className="text-zinc-600 text-lg md:text-xl px-4 text-center">CMND/CTRL + K to search</p>
           </div>
         </div>
       </div>

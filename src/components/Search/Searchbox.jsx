@@ -8,6 +8,7 @@ function Searchbox({ onSongSelect }) {
   const [isLoading, setIsLoading] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
   const searchRef = useRef(null)
+  const inputRef = useRef(null)
 
   useEffect(() => {
     const handleSearch = async () => {
@@ -34,6 +35,21 @@ function Searchbox({ onSongSelect }) {
     return () => clearTimeout(debounceTimer)
   }, [query])
 
+  // Cmd+K / Ctrl+K to focus search
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        if (inputRef.current) {
+          inputRef.current.focus()
+          setShowDropdown(true)
+        }
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -49,6 +65,8 @@ function Searchbox({ onSongSelect }) {
     if (onSongSelect) {
       onSongSelect(songId)
       setShowDropdown(false)
+      setQuery('')
+      setResults([])
     }
   }
 
@@ -56,6 +74,7 @@ function Searchbox({ onSongSelect }) {
     <div className="relative w-full max-w-md" ref={searchRef}>
       <div className="relative">
         <input
+          ref={inputRef}
           type="text"
           className="w-full bg-zinc-950 text-white rounded-lg px-4 py-2 pr-10 border border-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-700"
           placeholder="Search for songs..."

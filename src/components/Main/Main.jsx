@@ -2,7 +2,7 @@ import React from 'react'
 import Searchbox from '../Search/Searchbox'
 import Banner from './Banner/Banner'
 import { useState } from 'react'
-
+import Songcontrol from './SongControls/Songcontrol'
 function Main() {
   const [selectedSongId, setSelectedSongId] = useState(null)
   
@@ -14,8 +14,11 @@ function Main() {
             <Searchbox onSongSelect={setSelectedSongId} />
           </div>
           
-          <div className="w-full overflow-hidden flex justify-center">
-            <Banner songId={selectedSongId} />
+          <div className="self-start pl-4 mb-8">
+            <div className="w-48 sm:w-64 md:w-80">
+              <Banner songId={selectedSongId} />
+              <Songcontrol />
+            </div>
           </div>
         </div>
       </div>
