@@ -3,17 +3,17 @@ import axios from 'axios'
 
 export const searchSongs = async (query) => {
   try {
-    const response = await axios.get(`https://saavn.dev/api/search?query=${encodeURIComponent(query)}`);
+    const response = await axios.get(`https://saavn.dev/api/search/songs?query=${encodeURIComponent(query)}&limit=3`);
     
     if (response.data.success) {
       // Extract first 3 songs from results
-      const songs = response.data.data.songs.results.slice(0, 3).map(song => ({
+      const songs = response.data.data.results.slice(0, 3).map(song => ({
         id: song.id,
-        title: song.title,
-        artist: song.primaryArtists,
-        imageUrl: song.image.find(img => img.quality === "150x150")?.url || song.image[0]?.url
+        title: song.name,
+        artist: song.artists.primary.map(a => a.name).join(', '),
+        imageUrl: song.image.find(img => img.quality === "150x150")?.url || song.image[0]?.url,
+
       }));
-      
       return songs;
     }
     return [];
@@ -36,6 +36,13 @@ export const getSongDetails = async (id) => {
         return currentQuality > prevQuality ? current : prev;
       }, song.image[0]);
       
+      const highestDownload = song.downloadUrl.reduce((prev, curr) => {
+        const prevQ = parseInt(prev.quality, 10);
+        const currQ = parseInt(curr.quality, 10);
+        return currQ > prevQ ? curr : prev;
+      }, song.downloadUrl[0]);
+      console.log(highestDownload)
+      
       return {
         id: song.id,
         title: song.name,
@@ -43,8 +50,10 @@ export const getSongDetails = async (id) => {
         imageUrl: highestResImage.url,
         duration: song.duration,
         album: song.album.name,
+        songUrl: highestDownload.url
       };
     }
+ 
     return null;
   } catch (error) {
     console.error("Error fetching song details:", error);
