@@ -19,7 +19,7 @@ function Main() {
             <div className="flex flex-col md:flex-row items-start justify-between w-full">
               <div className="w-48 sm:w-64 md:w-80">
                 <Banner songId={selectedSongId} />
-                <Songcontrol />
+                <Songcontrol songId={selectedSongId} />
               </div>
               <div className="flex-1 md:ml-6 md:p-4">
                 <SongData songId={selectedSongId} />

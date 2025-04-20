@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60)
@@ -8,6 +8,9 @@ function formatTime(seconds) {
 
 function Seekbar({ duration = 0, initialTime = 0, onSeek }) {
   const [value, setValue] = useState(initialTime)
+  useEffect(() => {
+    setValue(initialTime)
+  }, [initialTime])
   const [hover, setHover] = useState(false)
   const [hoverPos, setHoverPos] = useState(0)
   const [hoverTime, setHoverTime] = useState(0)
@@ -62,7 +65,10 @@ function Seekbar({ duration = 0, initialTime = 0, onSeek }) {
           </div>
         )}
       </div>
-      <div className="mt-1 text-xs text-gray-200">{formatTime(value)}</div>
+      <div className="mt-1 text-xs text-gray-200 flex justify-between">
+        <span>{formatTime(value)}</span>
+        <span>{formatTime(duration)}</span>
+      </div>
     </div>
   )
 }

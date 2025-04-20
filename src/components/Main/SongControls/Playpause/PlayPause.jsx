@@ -1,13 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Play, Pause } from 'lucide-react'
 
-function PlayPause({ isPlaying: initial = false, onToggle }) {
-  const [isPlaying, setIsPlaying] = useState(initial)
-
+function PlayPause({ isPlaying = false, onToggle }) {
   const handleClick = () => {
-    const next = !isPlaying
-    setIsPlaying(next)
-    if (onToggle) onToggle(next)
+    if (onToggle) onToggle(!isPlaying)
   }
 
   return (

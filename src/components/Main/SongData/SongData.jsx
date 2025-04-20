@@ -31,8 +31,8 @@ function SongData({ songId }) {
 
   return (
     <div className="text-center mt-4">
-      <h1 className="text-white text-4xl md:text-6xl font-extrabold">{songDetails?.title}</h1>
-      <p className="text-zinc-300 text-lg md:text-lg mt-2">{songDetails?.artist}</p>
+      <h1 className="text-white text-4xl md:text-6xl font-extrabold">{songDetails.title}</h1>
+      <p className="text-zinc-300 text-lg md:text-lg mt-2">{songDetails.artist}</p>
     </div>
   )
 }
