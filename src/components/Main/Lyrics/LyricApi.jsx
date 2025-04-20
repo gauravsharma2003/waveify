@@ -80,7 +80,7 @@ function LyricApi({ song, artist }) {
 
   if (lines.length > 0) {
     return (
-      <div ref={listRef} className="space-y-2 text-center overflow-y-auto h-24 text-lg md:text-xl">
+      <div ref={listRef} className="space-y-2 text-center overflow-y-auto h-40 text-lg md:text-3xl">
         {lines.map((ln, i) => {
           const isActive = i === activeIndex
           const isBefore = i < activeIndex
