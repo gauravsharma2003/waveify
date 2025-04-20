@@ -78,10 +78,7 @@ export const getSongDetails = async (id) => {
 
 function Api() {
   return (
-    <div>
-      <h2>Music API Component</h2>
-      <p>This component exports functions for searching songs and getting song details.</p>
-    </div>
+   console.log("working" )
   )
 }
 
