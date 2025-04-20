@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 
 function Blur({ imageUrl }) {
-  const [prevColor, setPrevColor] = useState('rgba(12, 12, 12, 0.3)')
+  const [prevColor, setPrevColor] = useState('rgba(1, 1, 1, 0.1)')
   const [currentColor, setCurrentColor] = useState('rgba(12, 12, 12, 0.3)')
   const [fading, setFading] = useState(false)
   const canvasRef = useRef(null)
@@ -48,14 +48,12 @@ function Blur({ imageUrl }) {
       samples.sort((a, b) => Math.max(b.r, b.g, b.b) - Math.max(a.r, a.g, a.b))
       const { r, g, b } = samples[0]
       const newColor = `rgba(${r}, ${g}, ${b}, 0.2)`
-      // start fade: preserve old, set new and trigger transition
       setPrevColor(currentColor)
       setCurrentColor(newColor)
       setFading(true)
     }
   }
 
-  // when fading completes, clear prev and end fade
   useEffect(() => {
     if (fading) {
       const t = setTimeout(() => {
@@ -76,15 +74,15 @@ function Blur({ imageUrl }) {
           className="absolute top-0 left-[-50%] w-[100%] h-[100%] rounded-full"
           style={{
             backgroundImage: `radial-gradient(ellipse at 50% 50%, ${prevColor} 0%, transparent 70%)`,
-            filter: 'blur(20px)'
+            filter: 'blur(80px)'
           }}
         />
         <div
           className="absolute top-0 left-[-50%] w-[100%] h-[100%] rounded-full transition-opacity duration-1000"
           style={{
             backgroundImage: `radial-gradient(ellipse at 50% 50%, ${currentColor} 0%, transparent 70%)`,
-            filter: 'blur(20px)',
-            opacity: fading ? 1 : 0
+            filter: 'blur(80px)',
+            opacity: fading ? 0 : 1
           }}
         />
       </div>

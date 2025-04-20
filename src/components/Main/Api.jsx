@@ -10,7 +10,10 @@ export const searchSongs = async (query) => {
       const songs = response.data.data.results.slice(0, 3).map(song => ({
         id: song.id,
         title: song.name,
-        artist: song.artists.primary.map(a => a.name).join(', '),
+        // split names containing &amp; into separate artists
+        artist: song.artists.primary
+          .flatMap(a => a.name.split('&amp;').map(n => n.trim()))
+          .join(', '),
         imageUrl: song.image.find(img => img.quality === "150x150")?.url || song.image[0]?.url,
 
       }));
@@ -46,7 +49,9 @@ export const getSongDetails = async (id) => {
       return {
         id: song.id,
         title: song.name,
-        artist: song.artists.primary.map(artist => artist.name).join(', '),
+        artist: song.artists.primary
+          .flatMap(a => a.name.split('&amp;').map(n => n.trim()))
+          .join(', '),
         imageUrl: highestResImage.url,
         duration: song.duration,
         album: song.album.name,
