@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 
 function Blur({ imageUrl }) {
-  const [flareColor, setFlareColor] = useState('rgba(12, 12, 12, 0.3)')
+  const [prevColor, setPrevColor] = useState('rgba(12, 12, 12, 0.3)')
+  const [currentColor, setCurrentColor] = useState('rgba(12, 12, 12, 0.3)')
+  const [fading, setFading] = useState(false)
   const canvasRef = useRef(null)
   const imgRef = useRef(null)
 
@@ -45,20 +47,44 @@ function Blur({ imageUrl }) {
     if (samples.length) {
       samples.sort((a, b) => Math.max(b.r, b.g, b.b) - Math.max(a.r, a.g, a.b))
       const { r, g, b } = samples[0]
-      setFlareColor(`rgba(${r}, ${g}, ${b}, 0.2)`)
+      const newColor = `rgba(${r}, ${g}, ${b}, 0.2)`
+      // start fade: preserve old, set new and trigger transition
+      setPrevColor(currentColor)
+      setCurrentColor(newColor)
+      setFading(true)
     }
   }
+
+  // when fading completes, clear prev and end fade
+  useEffect(() => {
+    if (fading) {
+      const t = setTimeout(() => {
+        setPrevColor(currentColor)
+        setFading(false)
+      }, 1000) 
+      return () => clearTimeout(t)
+    }
+  }, [currentColor, fading])
 
   return (
     <>
       <img ref={imgRef} src={imageUrl} alt="" className="hidden" />
       <canvas ref={canvasRef} className="hidden" />
       <div className="absolute inset-0 overflow-visible pointer-events-none">
+        {/* bottom layer stays static */}
         <div
           className="absolute top-0 left-[-50%] w-[100%] h-[100%] rounded-full"
           style={{
-            backgroundImage: `radial-gradient(ellipse at 50% 50%, ${flareColor} 0%, transparent 70%)`,
+            backgroundImage: `radial-gradient(ellipse at 50% 50%, ${prevColor} 0%, transparent 70%)`,
             filter: 'blur(20px)'
+          }}
+        />
+        <div
+          className="absolute top-0 left-[-50%] w-[100%] h-[100%] rounded-full transition-opacity duration-1000"
+          style={{
+            backgroundImage: `radial-gradient(ellipse at 50% 50%, ${currentColor} 0%, transparent 70%)`,
+            filter: 'blur(20px)',
+            opacity: fading ? 1 : 0
           }}
         />
       </div>
