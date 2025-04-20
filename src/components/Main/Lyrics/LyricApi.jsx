@@ -17,8 +17,18 @@ function LyricApi({ song, artist }) {
       try {
         const query = encodeURIComponent(`${song} ${artist}`)
         const response = await axios.get(`https://lrclib.net/api/search?q=${query}`)
-        const items = response.data || []
-        const best = items.find(item => item.syncedLyrics) || items[0] || null
+        let items = response.data || []
+        // pick best result or fallback
+        let best = items.find(item => item.syncedLyrics) || items[0] || null
+        // if nothing found, retry search by song title only
+        if (!best) {
+          const fallbackQuery = encodeURIComponent(song)
+          const fallbackResponse = await axios.get(`https://lrclib.net/api/search?q=${fallbackQuery}`)
+          const fallbackItems = fallbackResponse.data || []
+          // try exact title match (case-insensitive)
+          const exactMatch = fallbackItems.find(item => item.title?.toLowerCase() === song.toLowerCase())
+          best = exactMatch || fallbackItems.find(item => item.syncedLyrics) || fallbackItems[0] || null
+        }
         setLyricData(best)
       } catch (err) {
         console.error('Error fetching lyrics API:', err)

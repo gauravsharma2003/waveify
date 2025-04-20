@@ -57,7 +57,7 @@ function Banner({ songId }) {
 
   if (!songId) {
     return (
-      <div className="w-full relative flex justify-center items-center py-4">
+      <div className="w-full relative flex justify-center items-center pt-4 pb-0">
         <Blur imageUrl={displayImageUrl} />
         <div className="w-full max-w-[500px] h-auto aspect-square bg-zinc-950 rounded-lg relative">
           <div className="absolute inset-0 flex items-center justify-center">
@@ -70,14 +70,14 @@ function Banner({ songId }) {
 
   if (error || !songDetails) {
     return (
-      <div className="w-full relative flex justify-center items-center py-4">
+      <div className="w-full relative flex justify-center items-center pt-4 pb-0">
         <Blur imageUrl={displayImageUrl} />
       </div>
     )
   }
 
   return (
-    <div className="w-full relative flex flex-col items-center py-4">
+    <div className="w-full relative flex flex-col items-center pt-4 pb-0">
       {/* Flare background */}
       <Blur imageUrl={displayImageUrl} />
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { getSongDetails } from '../Api'
-import LyricApi from '../Lyrics/LyricApi'
 
 function SongData({ songId }) {
   const [songDetails, setSongDetails] = useState(null)
@@ -31,12 +30,9 @@ function SongData({ songId }) {
   if (!songDetails) return null
 
   return (
-    <div className="text-center mt-4">
-      <h1 className="text-white text-4xl md:text-6xl font-extrabold">{songDetails.title}</h1>
-      <p className="text-zinc-300 text-lg md:text-lg mt-2">{songDetails.artist}</p>
-      <div className="mt-6 w-full">
-        <LyricApi song={songDetails.title} artist={songDetails.artist} />
-      </div>
+    <div className="text-left">
+      <h1 className="text-white text-4xl md:text-4xl font-extrabold">{songDetails.title}</h1>
+      <p className="text-zinc-300 text-sm md:text-sm mt-2">{songDetails.artist}</p>
     </div>
   )
 }
