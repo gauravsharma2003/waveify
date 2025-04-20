@@ -20,7 +20,7 @@ function Banner({ songId }) {
         setSongDetails(details)
       } catch (err) {
         console.error('Error fetching song details:', err)
-        setError('Failed to load song details')
+        // setError('Failed to load song details')
       } finally {
         setLoading(false)
       }
@@ -28,7 +28,6 @@ function Banner({ songId }) {
     fetchSongDetails()
   }, [songId])
 
-  // Preload new banner image and show shimmer until ready
   useEffect(() => {
     const newUrl = songDetails?.imageUrl
     if (!newUrl) return
@@ -73,9 +72,6 @@ function Banner({ songId }) {
     return (
       <div className="w-full relative flex justify-center items-center py-4">
         <Blur imageUrl={displayImageUrl} />
-        <div className="text-red-500 text-center">
-          <p>{error || 'Unable to load song details'}</p>
-        </div>
       </div>
     )
   }
