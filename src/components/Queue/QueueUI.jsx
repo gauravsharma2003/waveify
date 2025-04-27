@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon, ChevronUpIcon, QueueListIcon } from '@heroicons/react/24/outline';
 
 function QueueUI({ queueItems, currentSongId, onSongSelect }) {
   const [expanded, setExpanded] = useState(false);
 
-  // Debug log to verify
   useEffect(() => {
     console.log("Queue UI expanded state:", expanded);
     console.log("Queue items:", queueItems);
@@ -14,91 +13,130 @@ function QueueUI({ queueItems, currentSongId, onSongSelect }) {
     setExpanded(prev => !prev);
   };
 
-  // Early return if no queue items
   if (!queueItems || queueItems.length === 0) return null;
 
-  // Make a copy of the queue items to avoid mutating props
   const queueCopy = [...queueItems];
   
-  // Find current song index
   const currentIndex = queueCopy.findIndex(song => song.id === currentSongId);
   
-  // Create a rearranged queue with current song removed and the rest in order
   let orderedQueue = [];
   if (currentIndex !== -1) {
-    // Add all songs after current song
     orderedQueue = [...queueCopy.slice(currentIndex + 1)];
-    // Add all songs before current song
     orderedQueue = [...orderedQueue, ...queueCopy.slice(0, currentIndex)];
   } else {
     orderedQueue = queueCopy;
   }
 
-  // If no songs in queue after filtering, return null
   if (orderedQueue.length === 0) return null;
 
-  // The first song in ordered queue is next to play
+
   const nextSong = orderedQueue[0];
 
   return (
-    <div className="bg-zinc-800 rounded-lg shadow-lg relative">
-      {/* Next Playing Song - Now clickable too */}
-      <div 
-        className="p-3 border-b border-zinc-700 cursor-pointer hover:bg-zinc-700"
-        onClick={() => onSongSelect(nextSong.id)}
+    <div className="relative">
+      <button 
+        onClick={toggleExpanded}
+        className="md:hidden relative flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 rounded-full p-2 text-white shadow-lg transition-colors"
+        aria-label="Toggle queue"
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <img 
-              src={nextSong.image} 
-              alt={nextSong.name}
-              className="w-12 h-12 object-cover rounded"
-              onError={(e) => {e.target.src = 'https://via.placeholder.com/80'}}
-            />
-            <div>
-              <h3 className="text-xs font-medium text-gray-400">NEXT PLAYING</h3>
-              <p className="text-white font-medium">{nextSong.name}</p>
-              <p className="text-sm text-gray-400">{nextSong.artist}</p>
+        <QueueListIcon className="w-6 h-6" />
+        <span className="absolute -top-1 -right-1 bg-purple-600 text-xs rounded-full w-5 h-5 flex items-center justify-center">
+          {orderedQueue.length}
+        </span>
+      </button>
+
+      <div className="hidden md:block bg-zinc-800/90 backdrop-blur-md rounded-lg shadow-lg overflow-hidden w-[280px]">
+        <div 
+          className="p-3 border-b border-zinc-700/50 cursor-pointer hover:bg-zinc-700/70 transition-colors h-[72px] flex items-center"
+          onClick={() => onSongSelect(nextSong.id)}
+        >
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center space-x-3">
+              <img 
+                src={nextSong.image} 
+                alt={nextSong.name}
+                className="w-12 h-12 object-cover rounded shadow flex-shrink-0"
+                onError={(e) => {e.target.src = 'https://via.placeholder.com/80'}}
+              />
+              <div className="flex-1 min-w-0">
+                <h3 className="text-xs font-medium text-purple-400">NEXT UP</h3>
+                <p className="text-white font-medium truncate max-w-[170px]">{nextSong.name}</p>
+                <p className="text-sm text-gray-400 truncate max-w-[170px]">{nextSong.artist}</p>
+              </div>
             </div>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation(); 
+                toggleExpanded();
+              }}
+              className="p-1.5 text-gray-400 hover:text-white transition-colors rounded-full hover:bg-zinc-700 flex-shrink-0 ml-1"
+              aria-label="Toggle queue expansion"
+            >
+              {expanded ? 
+                <ChevronUpIcon className="w-5 h-5" /> : 
+                <ChevronDownIcon className="w-5 h-5" />
+              }
+            </button>
           </div>
-          <button 
-            onClick={(e) => {
-              e.stopPropagation(); // Prevent triggering parent onClick
-              toggleExpanded();
-            }}
-            className="p-1 text-gray-400 hover:text-white transition-colors"
-            aria-label="Toggle queue expansion"
-          >
-            {expanded ? 
-              <ChevronUpIcon className="w-5 h-5" /> : 
-              <ChevronDownIcon className="w-5 h-5" />
-            }
-          </button>
         </div>
       </div>
 
-      {/* Expanded Queue List - Separate from main component, fixed position */}
       {expanded && (
-        <div className="absolute top-full left-0 right-0 bg-zinc-800 max-h-60 overflow-y-auto z-50 rounded-b-lg shadow-xl border border-zinc-700 mt-0.5">
+        <div className="absolute right-0 top-full mt-2 md:mt-0.5 bg-zinc-800/95 backdrop-blur-md w-80 md:w-[280px] max-h-[300px] overflow-y-auto z-50 rounded-lg shadow-xl border border-zinc-700/50">
+          <div className="p-2 border-b border-zinc-700/50 flex items-center justify-between md:hidden">
+            <h3 className="text-white font-medium">Queue</h3>
+            <button 
+              onClick={toggleExpanded}
+              className="p-1 text-gray-400 hover:text-white"
+            >
+              <ChevronUpIcon className="w-5 h-5" />
+            </button>
+          </div>
+          
+          <div className="md:hidden">
+            <div 
+              className="p-3 border-b border-zinc-700/50 bg-zinc-700/30 flex items-center space-x-3 cursor-pointer"
+              onClick={() => {
+                onSongSelect(nextSong.id);
+                setExpanded(false);
+              }}
+            >
+              <img 
+                src={nextSong.image} 
+                alt={nextSong.name}
+                className="w-10 h-10 object-cover rounded"
+                onError={(e) => {e.target.src = 'https://via.placeholder.com/40'}}
+              />
+              <div>
+                <h3 className="text-xs font-medium text-purple-400">NEXT UP</h3>
+                <p className="text-white text-sm font-medium">{nextSong.name}</p>
+                <p className="text-xs text-gray-400">{nextSong.artist}</p>
+              </div>
+            </div>
+          </div>
+          
           {orderedQueue.length <= 1 ? (
             <div className="p-3 text-gray-400 text-center">No more songs in queue</div>
           ) : (
-            <ul className="divide-y divide-zinc-700">
+            <ul className="divide-y divide-zinc-700/50">
               {orderedQueue.slice(1).map((song) => (
                 <li 
                   key={song.id} 
-                  className="p-3 flex items-center space-x-3 hover:bg-zinc-700 cursor-pointer"
-                  onClick={() => onSongSelect(song.id)}
+                  className="p-3 flex items-center space-x-3 hover:bg-zinc-700/50 cursor-pointer transition-colors"
+                  onClick={() => {
+                    onSongSelect(song.id);
+                    setExpanded(false); 
+                  }}
                 >
                   <img 
                     src={song.image} 
                     alt={song.name}
-                    className="w-10 h-10 object-cover rounded"
+                    className="w-10 h-10 object-cover rounded shadow flex-shrink-0"
                     onError={(e) => {e.target.src = 'https://via.placeholder.com/40'}}
                   />
-                  <div>
-                    <p className="text-white text-sm font-medium">{song.name}</p>
-                    <p className="text-xs text-gray-400">{song.artist}</p>
+                  <div className="overflow-hidden flex-1 min-w-0">
+                    <p className="text-white text-sm font-medium truncate">{song.name}</p>
+                    <p className="text-xs text-gray-400 truncate">{song.artist}</p>
                   </div>
                 </li>
               ))}

@@ -59,7 +59,7 @@ function Banner({ songId }) {
     return (
       <div className="w-full relative flex justify-center items-center pt-4 pb-0">
         <Blur imageUrl={displayImageUrl} />
-        <div className="w-full max-w-[500px] h-auto aspect-square bg-zinc-950 rounded-lg relative">
+        <div className="w-full max-w-[350px] h-auto aspect-square bg-zinc-950 rounded-lg relative mx-auto">
           <div className="absolute inset-0 flex items-center justify-center">
             <p className="text-zinc-600 text-lg md:text-xl px-4 text-center">CMND/CTRL + K to search</p>
           </div>
@@ -81,21 +81,21 @@ function Banner({ songId }) {
       {/* Flare background */}
       <Blur imageUrl={displayImageUrl} />
 
-      <div className="w-full max-w-[500px] h-auto aspect-square bg-zinc-950 rounded-lg shadow-xl relative">
-        <div className="absolute inset-0 m-[1px] rounded-lg overflow-hidden">
+      <div className="w-full max-w-[350px] h-auto aspect-square bg-zinc-950 rounded-xl shadow-2xl relative mx-auto">
+        <div className="absolute inset-0 rounded-xl overflow-hidden">
           {displayImageUrl ? (
             <img
               src={displayImageUrl}
               alt={songDetails.title}
               className="absolute inset-0 w-full h-full object-cover"
-              onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/500x500?text=No+Image'; }}
+              onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/350x350?text=No+Image'; }}
             />
           ) : (
             <div className="w-full h-full bg-zinc-950" />
           )}
         </div>
         {imageLoading && (
-          <div className="absolute inset-0 w-full h-full animate-shimmer bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 rounded-lg" />
+          <div className="absolute inset-0 w-full h-full animate-shimmer bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 rounded-xl" />
         )}
       </div>
     </div>
