@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 
 function Blur({ imageUrl }) {
   const [prevColor, setPrevColor] = useState('rgba(1, 1, 1, 0.1)')
-  const [currentColor, setCurrentColor] = useState('rgba(12, 12, 12, 0.3)')
+  const [currentColor, setCurrentColor] = useState('rgba(12, 12, 12, 0.2)')
   const [fading, setFading] = useState(false)
   const canvasRef = useRef(null)
   const imgRef = useRef(null)
@@ -42,12 +42,12 @@ function Blur({ imageUrl }) {
       const max = Math.max(r, g, b)
       const min = Math.min(r, g, b)
       const sat = max === 0 ? 0 : (max - min) / max
-      if (sat > 0.1 && max > 20) samples.push({ r, g, b })
+      if (sat > 0.2 && max > 40) samples.push({ r, g, b, sat })
     }
     if (samples.length) {
-      samples.sort((a, b) => Math.max(b.r, b.g, b.b) - Math.max(a.r, a.g, a.b))
+      samples.sort((a, b) => b.sat - a.sat || Math.max(b.r, b.g, b.b) - Math.max(a.r, a.g, a.b))
       const { r, g, b } = samples[0]
-      const newColor = `rgba(${r}, ${g}, ${b}, 0.2)`
+      const newColor = `rgba(${r}, ${g}, ${b}, 0.3)`
       setPrevColor(currentColor)
       setCurrentColor(newColor)
       setFading(true)
@@ -59,7 +59,7 @@ function Blur({ imageUrl }) {
       const t = setTimeout(() => {
         setPrevColor(currentColor)
         setFading(false)
-      }, 1000) 
+      }, 2000)
       return () => clearTimeout(t)
     }
   }, [currentColor, fading])
@@ -69,19 +69,20 @@ function Blur({ imageUrl }) {
       <img ref={imgRef} src={imageUrl} alt="" className="hidden" />
       <canvas ref={canvasRef} className="hidden" />
       <div className="absolute inset-0 overflow-visible pointer-events-none">
-        {/* bottom layer stays static */}
+        {/* Static base shadow */}
         <div
-          className="absolute top-0 left-[-50%] w-[100%] h-[100%] rounded-full"
+          className="absolute inset-[-50%] rounded-full"
           style={{
-            backgroundImage: `radial-gradient(ellipse at 50% 50%, ${prevColor} 0%, transparent 70%)`,
-            filter: 'blur(80px)'
+            background: `radial-gradient(circle at center, ${prevColor} 0%, transparent 80%)`,
+            filter: 'blur(120px)'
           }}
         />
+        {/* Animated highlight shadow */}
         <div
-          className="absolute top-0 left-[-50%] w-[100%] h-[100%] rounded-full transition-opacity duration-1000"
+          className="absolute inset-[-50%] rounded-full transition-opacity duration-2000 ease-in-out"
           style={{
-            backgroundImage: `radial-gradient(ellipse at 50% 50%, ${currentColor} 0%, transparent 70%)`,
-            filter: 'blur(80px)',
+            background: `radial-gradient(circle at center, ${currentColor} 0%, transparent 80%)`,
+            filter: 'blur(120px)',
             opacity: fading ? 0 : 1
           }}
         />

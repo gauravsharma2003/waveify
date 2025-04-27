@@ -118,7 +118,7 @@ function Main() {
               </div>
               
       
-              <div className="mx-auto mt-6 lg:mt-0">
+              <div className="mx-auto mt-6  lg:mt-6">
                 <div className="bg-zinc-800/40 backdrop-blur-sm rounded-lg p-5 shadow-lg w-full max-w-sm h-[350px] overflow-y-auto">
                   <h2 className="text-xl text-white font-semibold mb-16">Lyrics</h2>
                   <div className="lyrics-container">
@@ -130,8 +130,7 @@ function Main() {
           )}
         </div>
       </div>
-      
-      <div className="w-full bg-zinc-900/90 backdrop-blur-lg border-t border-zinc-800 p-4 sticky bottom-0 z-20">
+      <div className="w-full bg-zinc-900/50 backdrop-blur-lg border-t border-zinc-800 p-4 sticky bottom-0 z-20">
         <div className="max-w-4xl mx-auto">
           <Songcontrol songId={selectedSongId} onSongEnd={handleSongEnd} />
         </div>
