@@ -3,7 +3,7 @@ import { getSongDetails } from '../Api'
 import PlayPause from './Playpause/PlayPause'
 import Seekbar from './Seekbar/Seekbar'
 
-function Songcontrol({ songId }) {
+function Songcontrol({ songId, onSongEnd }) {
   const [songDetails, setSongDetails] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -52,6 +52,12 @@ function Songcontrol({ songId }) {
     setCurrentTime(time)
   }
 
+  const handleEnded = () => {
+    if (onSongEnd) {
+      onSongEnd();
+    }
+  }
+
   if (!songId) return null
   if (loading) return <p className="text-center text-zinc-400"></p>
   if (error) return <p className="text-center text-red-500">{error}</p>
@@ -62,6 +68,7 @@ function Songcontrol({ songId }) {
       <audio
         ref={audioRef}
         onTimeUpdate={() => setCurrentTime(audioRef.current.currentTime)}
+        onEnded={handleEnded}
         className="hidden"
       />
       <PlayPause isPlaying={isPlaying} onToggle={handleToggle} />
